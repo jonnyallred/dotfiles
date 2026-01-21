@@ -1,0 +1,9 @@
+[user]
+	name = jonnyallred
+	email = jonnyallred@gmail.com
+[core]
+	autocrlf = input
+[init]
+	defaultBranch = main
+[pull]
+	rebase = false
