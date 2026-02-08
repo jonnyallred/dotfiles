@@ -19,25 +19,74 @@ wsl/            WSL-specific config
 env.template    Generic environment variable template
 ```
 
-## Quick Start (New Machine)
+## Getting Started (New Machine)
 
-```bash
-# 1. Clone the repo
-git clone git@github.com:jonnyallred/dotfiles.git ~/.dotfiles
+1. **Clone the repo**
 
-# 2. Run the bootstrap script
-~/.dotfiles/install.sh
+   ```bash
+   git clone git@github.com:jonnyallred/dotfiles.git ~/.dotfiles
+   ```
 
-# 3. Or, have Claude do it:
-# Open Claude Code and say: "Follow the instructions in ~/.dotfiles/CLAUDE-SETUP.md"
+2. **Run the bootstrap script**
+
+   ```bash
+   ~/.dotfiles/install.sh
+   ```
+
+   This installs: system packages, rbenv + Ruby 3.2.2, NVM + Node 24,
+   GitHub CLI, Claude Code, MCP memory server, and symlinks all config files.
+
+   To only symlink dotfiles (if tools are already installed):
+
+   ```bash
+   ~/.dotfiles/install.sh --link
+   ```
+
+3. **Authenticate services** (interactive, can't be automated)
+
+   ```bash
+   gh auth login        # GitHub CLI
+   claude               # Claude Code - follow OAuth flow on first launch
+   ```
+
+4. **Verify**
+
+   ```bash
+   ruby -v              # 3.2.2
+   node -v              # v24.x
+   gh auth status       # logged in
+   claude --version     # latest
+   ```
+
+5. **Clone projects**
+
+   ```bash
+   mkdir -p ~/projects
+   gh repo clone jonnyallred/boardgame-retreat ~/projects/boardgame-retreat
+   ```
+
+Or, have Claude do it all: open Claude Code and say
+"Follow the instructions in `~/.dotfiles/CLAUDE-SETUP.md`".
+
+See `CLAUDE-SETUP.md` for more detail and troubleshooting.
+
+## How Symlinks Work
+
+The install script symlinks config files from the repo into their expected locations:
+
+```
+~/.bashrc                      → ~/.dotfiles/bash/bashrc
+~/.profile                     → ~/.dotfiles/bash/profile
+~/.gitconfig                   → ~/.dotfiles/git/gitconfig
+~/.claude/settings.json        → ~/.dotfiles/claude/settings.json
+~/.claude/settings.local.json  → ~/.dotfiles/claude/settings.local.json
 ```
 
-## Manual Setup
-
-See `CLAUDE-SETUP.md` for step-by-step instructions that work for both humans and Claude.
+Edits to any of these files are edits to the repo. Run `git status` in
+`~/.dotfiles` to see changes, then commit and push as usual.
 
 ## Adding New Dotfiles
 
 1. Copy the file into the appropriate subdirectory
-2. Add a symlink entry in `install.sh`
+2. Add a `link_file` entry in `install.sh`
 3. Commit and push
