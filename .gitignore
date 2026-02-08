@@ -1,0 +1,13 @@
+# Secrets and credentials - never commit these
+*.secret
+*.key
+*.pem
+credentials*
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Backup files created by install script
+*.backup.*
