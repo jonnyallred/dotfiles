@@ -1,4 +1,17 @@
 {
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "printf '\\a'"
+          }
+        ]
+      }
+    ]
+  },
   "mcpServers": {
     "memory": {
       "command": "mcp-server-memory",
