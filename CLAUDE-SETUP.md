@@ -17,13 +17,23 @@ A human can also follow these steps manually.
 ~/.dotfiles/install.sh
 ```
 
-This handles: apt packages, rbenv + Ruby 3.2.2, NVM + Node 24, GitHub CLI,
-Claude Code, dotfile symlinks, WSL systemd config, and git identity.
+This handles: apt packages, rbenv + Ruby 3.2.2, NVM + Node 24, uv (Python),
+GitHub CLI, Claude Code, dotfile symlinks, MCP memory server, WSL systemd
+config, and git identity.
 
 If you only want to link the dotfiles (tools already installed):
 
 ```bash
 ~/.dotfiles/install.sh --link
+```
+
+Individual tools can be installed separately:
+
+```bash
+~/.dotfiles/scripts/node.sh       # NVM + Node + ~/.local/bin symlinks
+~/.dotfiles/scripts/python.sh     # uv/uvx
+~/.dotfiles/scripts/ruby.sh       # rbenv + Ruby
+~/.dotfiles/scripts/mcp.sh        # MCP servers + ~/.local/bin symlinks
 ```
 
 ### 2. Post-install: Authenticate services
@@ -46,9 +56,17 @@ Run these to confirm:
 ```bash
 ruby -v          # Should show 3.2.2
 node -v          # Should show v24.x
+uv --version     # Should show latest
 git --version    # Should show 2.34+
 gh auth status   # Should show logged in
 claude --version # Should show latest
+```
+
+Verify PATH symlinks:
+
+```bash
+which node npm npx mcp-server-memory uv
+# All should point to ~/.local/bin/ or ~/.nvm/...
 ```
 
 ### 4. Clone projects
@@ -104,7 +122,7 @@ git pull
 ## Adding New Config Files
 
 1. Put the file in the appropriate subdirectory under `~/.dotfiles/`
-2. Add a `link_file` entry in `install.sh`
+2. Add a `link_file` entry in the `link_dotfiles()` function in `install.sh`
 3. Document it in this file
 4. Commit and push
 
@@ -114,5 +132,6 @@ git pull
 - **NVM not found**: Same fix - `source ~/.bashrc`
 - **Claude Code auth expired**: Run `claude` and re-authenticate
 - **WSL systemd not working**: Run `wsl --shutdown` from Windows PowerShell, then reopen
-- **MCP memory server fails**: Run `npm install -g @modelcontextprotocol/server-memory`
-  and update the path in `~/.claude/settings.json` if the node version changed
+- **MCP memory server fails**: Run `~/.dotfiles/scripts/mcp.sh` to reinstall,
+  or check that `~/.local/bin/mcp-server-memory` exists
+- **uv not found**: Run `~/.dotfiles/scripts/python.sh` to install
