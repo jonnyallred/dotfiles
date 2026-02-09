@@ -10,7 +10,8 @@ install_packages() {
     sudo apt-get update -qq
     sudo apt-get install -y -qq \
         build-essential curl wget git unzip \
-        libssl-dev libreadline-dev zlib1g-dev libyaml-dev libffi-dev
+        libssl-dev libreadline-dev zlib1g-dev libyaml-dev libffi-dev \
+        wslu
     log "Base packages installed."
 }
 

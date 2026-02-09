@@ -24,7 +24,7 @@ install_node() {
 
     # Symlink node/npm/npx to ~/.local/bin for non-interactive processes
     local node_bin
-    node_bin="$(dirname "$(nvm which current)")"
+    node_bin="$(dirname "$(readlink -f "$(nvm which current)")")"
     mkdir -p "$HOME/.local/bin"
     for cmd in node npm npx; do
         if [ -f "$node_bin/$cmd" ]; then
