@@ -1,0 +1,2 @@
+# Force LF line endings for all shell/config files when checked out on any platform
+* text=auto eol=lf
