@@ -94,6 +94,8 @@ gh repo clone jonnyallred/boardgame-retreat
 - MCP memory server for persistent context across sessions
 - Tool permission allowlist covering: git, ruby/rails, node/npm, python,
   docker, and common CLI utilities
+- Global `CLAUDE.md` with cross-project instructions (linked to `~/CLAUDE.md`)
+- Custom skills directory (linked to `~/.claude/skills/`)
 
 ### WSL
 - Systemd enabled for proper service management

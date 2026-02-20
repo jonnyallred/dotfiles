@@ -34,6 +34,8 @@ link_dotfiles() {
     mkdir -p "$HOME/.claude"
     link_file "$DOTFILES_DIR/claude/settings.json" "$HOME/.claude/settings.json"
     link_file "$DOTFILES_DIR/claude/settings.local.json" "$HOME/.claude/settings.local.json"
+    link_file "$DOTFILES_DIR/claude/CLAUDE.md" "$HOME/CLAUDE.md"
+    link_file "$DOTFILES_DIR/claude/skills" "$HOME/.claude/skills"
     log "Dotfiles linked."
 }
 
