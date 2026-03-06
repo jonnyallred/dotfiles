@@ -36,7 +36,81 @@ Individual tools can be installed separately:
 ~/.dotfiles/scripts/mcp.sh        # MCP servers + ~/.local/bin symlinks
 ```
 
-### 2. Post-install: Authenticate services
+### 2. Set up secrets management (pass + GPG)
+
+`pass` and `direnv` are installed automatically by `install.sh`. The GPG key
+and password store are NOT in this repo — they must be set up manually on each
+machine.
+
+**On a brand new machine (first time):**
+
+```bash
+# Generate a GPG key
+gpg --full-generate-key
+# Choose: RSA 4096, no expiration, your name + jonnyallred@gmail.com
+
+# Init pass with the key fingerprint shown above
+pass init <fingerprint>
+pass git init
+pass git remote add origin git@github.com:jonnyallred/secrets.git
+pass git push -u origin main
+```
+
+**On a subsequent machine (already have a GPG key and secrets repo):**
+
+```bash
+# Copy jonny-gpg-public.asc and jonny-gpg-private.asc from your other machine
+# (via USB, scp, etc — never send private key over unencrypted channels)
+
+gpg --import ~/jonny-gpg-public.asc
+gpg --import ~/jonny-gpg-private.asc
+
+# Trust the key fully
+gpg --edit-key <fingerprint>
+# At the gpg> prompt: trust → 5 (ultimate) → quit
+
+# Clone your secrets repo
+pass clone git@github.com:jonnyallred/secrets.git
+
+# Delete the key files now that they're imported
+rm ~/jonny-gpg-public.asc ~/jonny-gpg-private.asc
+```
+
+**Exporting GPG key from an existing machine:**
+
+```bash
+gpg --export --armor <fingerprint> > ~/jonny-gpg-public.asc
+gpg --export-secret-keys --armor <fingerprint> > ~/jonny-gpg-private.asc
+```
+
+**Daily usage:**
+
+```bash
+pass insert dev/my-api-key     # Add a secret (prompts for value)
+pass dev/my-api-key            # Retrieve a secret
+pass git push                  # Sync to other machines
+pass git pull                  # Pull updates from another machine
+```
+
+**Wiring secrets into a project with direnv:**
+
+Create a `.envrc` in the project root (do NOT commit this file):
+
+```bash
+export MY_API_KEY=$(pass dev/my-api-key)
+```
+
+Then run `direnv allow .` — the key will auto-load whenever you `cd` into the
+directory and unset when you leave.
+
+Add `.envrc` to your global gitignore if not already done:
+
+```bash
+echo ".envrc" >> ~/.gitignore_global
+git config --global core.excludesfile ~/.gitignore_global
+```
+
+### 3. Post-install: Authenticate services
 
 After install.sh completes, these need manual/interactive auth:
 
@@ -97,6 +171,13 @@ gh repo clone jonnyallred/boardgame-retreat
 - Global `CLAUDE.md` with cross-project instructions (linked to `~/CLAUDE.md`)
 - Custom skills directory (linked to `~/.claude/skills/`)
 
+### Secrets (pass + direnv)
+- `pass` stores GPG-encrypted secrets in `~/.password-store/`, synced via a
+  private git repo at `git@github.com:jonnyallred/secrets.git`
+- `direnv` auto-loads per-project secrets from `.envrc` files on `cd`
+- The `direnv` shell hook is in `bash/bashrc`
+- GPG key and secrets repo must be set up manually on each machine (see step 2)
+
 ### WSL
 - Systemd enabled for proper service management
 
@@ -137,3 +218,5 @@ git pull
 - **MCP memory server fails**: Run `~/.dotfiles/scripts/mcp.sh` to reinstall,
   or check that `~/.local/bin/mcp-server-memory` exists
 - **uv not found**: Run `~/.dotfiles/scripts/python.sh` to install
+- **pass: no GPG key**: Follow step 2 above to import your key or generate a new one
+- **direnv not loading .envrc**: Run `direnv allow .` in the project directory

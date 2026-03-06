@@ -11,7 +11,8 @@ install_packages() {
     sudo apt-get install -y -qq \
         build-essential curl wget git unzip \
         libssl-dev libreadline-dev zlib1g-dev libyaml-dev libffi-dev \
-        wslu
+        wslu \
+        pass direnv
     log "Base packages installed."
 }
 
