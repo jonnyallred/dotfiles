@@ -154,5 +154,6 @@
         "MEMORY_FILE_PATH": "/home/jonny/.claude/memory.jsonl"
       }
     }
-  }
+  },
+  "effortLevel": "high"
 }
